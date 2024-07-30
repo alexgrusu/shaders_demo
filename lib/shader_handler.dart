@@ -301,6 +301,8 @@ class ShaderHandler {
   }
 
   Function blit() {
+    textures[0].activate();
+
     _rc.bindBuffer(WebGL.ARRAY_BUFFER, _rc.createBuffer());
     _rc.bufferData(WebGL.ARRAY_BUFFER,
         Float32Array.fromList([-1, -1, -1, 1, 1, 1, 1, -1]), WebGL.STATIC_DRAW);
@@ -309,6 +311,8 @@ class ShaderHandler {
         Uint16Array.fromList([0, 1, 2, 0, 2, 3]), WebGL.STATIC_DRAW);
     _rc.vertexAttribPointer(0, 2, WebGL.FLOAT, false, 0, 0);
     _rc.enableVertexAttribArray(0);
+
+    textures[0].signalNewFrameAvailable();
 
     return (dynamic destination) {
       _rc.bindFramebuffer(WebGL.FRAMEBUFFER, destination);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_angle/flutter_angle.dart';
 
 import 'package:shaders_demo/shader_handler.dart';
 
@@ -37,11 +36,10 @@ class _MyHomePageState extends State<MyHomePage> {
   late ShaderHandler shaderHandler;
 
   void animate() async {
-    Future.delayed(const Duration(milliseconds: 500), () async {
+    Future.delayed(const Duration(milliseconds: 50), () async {
       if (shaderHandler.textures.isNotEmpty) {
         shaderHandler.textures.first.activate();
         shaderHandler.update();
-        await shaderHandler.textures.first.signalNewFrameAvailable();
       }
       animate();
     });
@@ -58,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),

@@ -27,8 +27,8 @@ class ShaderFragmentSource {
             precision highp float;
             precision mediump sampler2D;
 
-            layout(location = 0) out vec2 vUv;
-            layout(location = 1) out vec4 fragColor;
+            in vec2 vUv;
+            out vec4 fragColor;
             uniform sampler2D uTexture;
             uniform float value;
 
@@ -45,10 +45,10 @@ class ShaderFragmentSource {
             float amount = 0.1;
             float smoothAmount = 0.2;
 
-            layout(location = 0) out vec2 vUv;
+            in vec2 vUv;
             uniform sampler2D uTexture;
             uniform float uAmount;
-            layout(location = 1) out vec4 fragColor;
+            out vec4 fragColor;
 
             float random(vec2 p) {
               vec2 K1 = vec2(
@@ -77,14 +77,15 @@ class ShaderFragmentSource {
             precision highp float;
             precision mediump sampler2D;
 
-            layout(location = 0) out vec2 vUv;
+            in vec2 vUv;
             uniform sampler2D uTarget;
             uniform float aspectRatio;
             uniform vec3 color;
             uniform vec2 point;
             uniform float radius;
             uniform float opacity;
-            layout(location = 1) out vec4 fragColor;
+
+            out vec4 fragColor;
 
             void main () {
               vec2 p = vUv - point.xy;
@@ -100,13 +101,13 @@ class ShaderFragmentSource {
             precision highp float;
             precision mediump sampler2D;
 
-            layout(location = 0) out vec2 vUv;
+            in vec2 vUv;
             uniform sampler2D uVelocity;
             uniform sampler2D uSource;
             uniform vec2 texelSize;
             uniform float dt;
             uniform float dissipation;
-            layout(location = 1) out vec4 fragColor;
+            out vec4 fragColor;
 
             vec4 bilerp (in sampler2D sam, in vec2 p) {
               vec4 st;
@@ -155,12 +156,12 @@ class ShaderFragmentSource {
           precision highp float;
           precision mediump sampler2D;
 
-          layout(location = 0) out vec2 vUv;
-          layout(location = 1) out vec2 vL;
-          layout(location = 2) out vec2 vR;
-          layout(location = 3) out vec2 vT;
-          layout(location = 4) out vec2 vB;
-          layout(location = 5) out vec4 fragColor;
+          in vec2 vUv;
+          in vec2 vL;
+          in vec2 vR;
+          in vec2 vT;
+          in vec2 vB;
+          out vec4 fragColor;
           uniform sampler2D uVelocity;
 
           vec2 sampleVelocity (in vec2 uv) {
@@ -187,13 +188,13 @@ class ShaderFragmentSource {
           precision highp float;
           precision mediump sampler2D;
 
-          layout(location = 0) out vec2 vUv;
-          layout(location = 1) out vec2 vL;
-          layout(location = 2) out vec2 vR;
-          layout(location = 3) out vec2 vT;
-          layout(location = 4) out vec2 vB;
+          in vec2 vUv;
+          in vec2 vL;
+          in vec2 vR;
+          in vec2 vT;
+          in vec2 vB;
           uniform sampler2D uVelocity;
-          layout(location = 5) out vec4 fragColor;
+          out vec4 fragColor;
 
           void main () {
             float L = texture(uVelocity, vL).y;
@@ -210,14 +211,14 @@ class ShaderFragmentSource {
           precision highp float;
           precision mediump sampler2D;
 
-          layout(location = 0) out vec2 vUv;
-          layout(location = 1) out vec2 vT;
-          layout(location = 2) out vec2 vB;
+          in vec2 vUv;
+          in vec2 vT;
+          in vec2 vB;
           uniform sampler2D uVelocity;
           uniform sampler2D uCurl;
           uniform float curl;
           uniform float dt;
-          layout(location = 3) out vec4 fragColor;
+          out vec4 fragColor;
 
           void main () {
             float T = texture(uCurl, vT).x;
@@ -235,14 +236,14 @@ class ShaderFragmentSource {
           precision highp float;
           precision mediump sampler2D;
 
-          layout(location = 0) out vec2 vUv;
-          layout(location = 1) out vec2 vL;
-          layout(location = 2) out vec2 vR;
-          layout(location = 3) out vec2 vT;
-          layout(location = 4) out vec2 vB;
+          in vec2 vUv;
+          in vec2 vL;
+          in vec2 vR;
+          in vec2 vT;
+          in vec2 vB;
           uniform sampler2D uPressure;
           uniform sampler2D uDivergence;
-          layout(location = 5) out vec4 fragColor;
+          out vec4 fragColor;
 
           vec2 boundary (in vec2 uv) {
             uv = min(max(uv, 0.0), 1.0);
@@ -266,14 +267,14 @@ class ShaderFragmentSource {
           precision highp float;
           precision mediump sampler2D;
 
-          layout(location = 0) out vec2 vUv;
-          layout(location = 1) out vec2 vL;
-          layout(location = 2) out vec2 vR;
-          layout(location = 3) out vec2 vT;
-          layout(location = 4) out vec2 vB;
+          in vec2 vUv;
+          in vec2 vL;
+          in vec2 vR;
+          in vec2 vT;
+          in vec2 vB;
           uniform sampler2D uPressure;
           uniform sampler2D uVelocity;
-          layout(location = 5) out vec4 fragColor;
+          out vec4 fragColor;
 
           vec2 boundary (in vec2 uv) {
             uv = min(max(uv, 0.0), 1.0);
