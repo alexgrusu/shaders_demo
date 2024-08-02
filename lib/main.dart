@@ -36,6 +36,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late ShaderHandler shaderHandler;
   late Size size;
+  bool ready = false;
 
   void animate() async {
     Future.delayed(const Duration(milliseconds: 50), () async {
@@ -50,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_){
+      ready = true;
       shaderHandler = ShaderHandler(
         size.width.toInt(),
         size.height.toInt(),
@@ -80,9 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.black,
               child: Builder(builder: (BuildContext context) {
                 if (kIsWeb) {
-                  return !shaderHandler.textures.isNotEmpty?Container():HtmlElementView(viewType: shaderHandler.textures.first.textureId.toString());
+                  return ready && shaderHandler.textures.isNotEmpty?HtmlElementView(viewType: shaderHandler.textures.first.textureId.toString()):Container();
                 } else {
-                  return shaderHandler.textures.isNotEmpty?Texture(textureId: shaderHandler.textures.first.textureId):Container();
+                  return ready && shaderHandler.textures.isNotEmpty?Texture(textureId: shaderHandler.textures.first.textureId):Container();
                 }
               })
             )
