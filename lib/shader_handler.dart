@@ -18,12 +18,19 @@ import 'package:shaders_demo/shader_fragment_source.dart';
 import 'package:shaders_demo/utils/shader_utils.dart';
 
 class ShaderHandler {
+  ShaderHandler(
+    this.textureWidth,
+    this.textureHeight,
+    this.defaultAspectRatio,
+    this.onSetupDone
+  );
   final config = const ShaderConfig();
 
   /// Constants
-  static const int textureWidth = 320;
-  static const int textureHeight = 640;
-  static const double defaultAspectRatio = 4;
+  final int textureWidth;
+  final int textureHeight;
+  final double defaultAspectRatio;
+  final Function onSetupDone;
 
   /// Buffers
   late DoubleFrameBufferObject density;
@@ -95,12 +102,14 @@ class ShaderHandler {
       }
       return;
     }
-    final shaderRC = RenderingContextFactory().create(textures[0]);
+    final shaderRC = RenderingContextFactory.create(textures[0]);
 
     _rc = shaderRC.rc;
     _formatRGBA = shaderRC.formatRGBA;
     _formatRG = shaderRC.formatRG;
     _formatR = shaderRC.formatR;
+
+    onSetupDone();
 
     /// Create shaders
     _createShaders();
@@ -347,7 +356,20 @@ class ShaderHandler {
     blit()(density.write.fbo);
     density.swap();
   }
+  
+  int t = DateTime.now().millisecondsSinceEpoch;
+  void update1(){
+    int _current = DateTime.now().millisecondsSinceEpoch;
 
+    double _blue = sin((_current - t) / 500);
+
+    // Clear canvas
+    _rc.clearColor(1.0, 0.0, _blue, 1.0);
+    _rc.clear(WebGL.COLOR_BUFFER_BIT);
+
+    _rc.flush();
+    FlutterAngle.updateTexture(textures.first);
+  }
   void update() {
     const dt = 0.005;
 
@@ -539,8 +561,7 @@ class ShaderHandler {
 
     /// Bind gradient subtract uniforms
     gradientSubtractProgram.bind();
-    _rc.uniform2f(gradientSubtractProgram.texelSize, 1.0 / textureWidth,
-        1.0 / textureHeight);
+    _rc.uniform2f(gradientSubtractProgram.texelSize, 1.0 / textureWidth, 1.0 / textureHeight);
     _rc.uniform1i(gradientSubtractProgram.uPressure, pressure.read.texId);
     _rc.uniform1i(gradientSubtractProgram.uVelocity, velocity.read.texId);
     blit()(velocity.write.fbo);
@@ -555,6 +576,10 @@ class ShaderHandler {
     blit()(null);
 
     /// Debug logging
-    splatProgram.logValues();
+    //splatProgram.logValues();
+    //_rc.clear(WebGL.COLOR_BUFFER_BIT);
+
+    _rc.flush();
+    FlutterAngle.updateTexture(textures.first);
   }
 }

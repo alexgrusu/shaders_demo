@@ -3,14 +3,11 @@ import 'package:shaders_demo/factory/model/render_texture_fromat.dart';
 import 'package:shaders_demo/factory/model/shader_rendering_context.dart';
 
 class RenderingContextFactory {
-  ShaderRenderingContext create(FlutterAngleTexture texture) {
+  static ShaderRenderingContext create(FlutterAngleTexture texture) {
     final rc = texture.getContext();
-    final formatRGBA =
-        _getSupportedFormat(rc, WebGL.RGBA16F, WebGL.RGBA, WebGL.HALF_FLOAT);
-    final formatRG =
-        _getSupportedFormat(rc, WebGL.RG16F, WebGL.RG, WebGL.HALF_FLOAT);
-    final formatR =
-        _getSupportedFormat(rc, WebGL.R16F, WebGL.RED, WebGL.HALF_FLOAT);
+    final formatRGBA = _getSupportedFormat(rc, WebGL.RGBA16F, WebGL.RGBA, WebGL.HALF_FLOAT);
+    final formatRG = _getSupportedFormat(rc, WebGL.RG16F, WebGL.RG, WebGL.HALF_FLOAT);
+    final formatR = _getSupportedFormat(rc, WebGL.R16F, WebGL.RED, WebGL.HALF_FLOAT);
 
     return ShaderRenderingContext(
       rc: rc,
@@ -20,7 +17,7 @@ class RenderingContextFactory {
     );
   }
 
-  RenderTextureFormat? _getSupportedFormat(
+  static RenderTextureFormat? _getSupportedFormat(
     RenderingContext rc,
     int internalFormat,
     int format,
@@ -42,7 +39,7 @@ class RenderingContextFactory {
     );
   }
 
-  bool _supportRenderTextureFormat(
+  static bool _supportRenderTextureFormat(
     RenderingContext rc,
     int internalFormat,
     int format,
@@ -52,17 +49,13 @@ class RenderingContextFactory {
     rc.bindTexture(WebGL.TEXTURE_2D, texture);
     rc.texParameteri(WebGL.TEXTURE_2D, WebGL.TEXTURE_MIN_FILTER, WebGL.NEAREST);
     rc.texParameteri(WebGL.TEXTURE_2D, WebGL.TEXTURE_MAG_FILTER, WebGL.NEAREST);
-    rc.texParameteri(
-        WebGL.TEXTURE_2D, WebGL.TEXTURE_WRAP_S, WebGL.CLAMP_TO_EDGE);
-    rc.texParameteri(
-        WebGL.TEXTURE_2D, WebGL.TEXTURE_WRAP_T, WebGL.CLAMP_TO_EDGE);
-    rc.texImage2D(
-        WebGL.TEXTURE_2D, 0, internalFormat, 4, 4, 0, format, type, null);
+    rc.texParameteri(WebGL.TEXTURE_2D, WebGL.TEXTURE_WRAP_S, WebGL.CLAMP_TO_EDGE);
+    rc.texParameteri(WebGL.TEXTURE_2D, WebGL.TEXTURE_WRAP_T, WebGL.CLAMP_TO_EDGE);
+    rc.texImage2D(WebGL.TEXTURE_2D, 0, internalFormat, 4, 4, 0, format, type, null);
 
     final fbo = rc.createFramebuffer();
     rc.bindFramebuffer(WebGL.FRAMEBUFFER, fbo);
-    rc.framebufferTexture2D(WebGL.FRAMEBUFFER, WebGL.COLOR_ATTACHMENT0,
-        WebGL.TEXTURE_2D, texture, 0);
+    rc.framebufferTexture2D(WebGL.FRAMEBUFFER, WebGL.COLOR_ATTACHMENT0,WebGL.TEXTURE_2D, texture, 0);
 
     final status = rc.checkFramebufferStatus(WebGL.FRAMEBUFFER);
 

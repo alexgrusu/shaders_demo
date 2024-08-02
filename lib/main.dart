@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shaders_demo/shader_handler.dart';
@@ -34,6 +35,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late ShaderHandler shaderHandler;
+  late Size size;
+  bool ready = false;
 
   void animate() async {
     Future.delayed(const Duration(milliseconds: 50), () async {
@@ -47,14 +50,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    shaderHandler = ShaderHandler();
-    shaderHandler.setup(context);
-    animate();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      ready = true;
+      shaderHandler = ShaderHandler(
+        size.width.toInt(),
+        size.height.toInt(),
+        MediaQuery.of(context).devicePixelRatio,
+        (){setState(() {});}
+      );
+      shaderHandler.setup(context);
+      animate();
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -64,11 +76,18 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Stack(
           children: [
-            shaderHandler.textures.isNotEmpty
-                ? Texture(
-                    textureId: shaderHandler.textures.first.textureId,
-                  )
-                : Container(),
+            Container(
+              width: size.width,
+              height: size.height,
+              color: Colors.black,
+              child: Builder(builder: (BuildContext context) {
+                if (kIsWeb) {
+                  return ready && shaderHandler.textures.isNotEmpty?HtmlElementView(viewType: shaderHandler.textures.first.textureId.toString()):Container();
+                } else {
+                  return ready && shaderHandler.textures.isNotEmpty?Texture(textureId: shaderHandler.textures.first.textureId):Container();
+                }
+              })
+            )
           ],
         ),
       ),
