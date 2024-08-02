@@ -18,17 +18,13 @@ class FrameBufferFactory {
     rc.bindTexture(WebGL.TEXTURE_2D, texture);
     rc.texParameteri(WebGL.TEXTURE_2D, WebGL.TEXTURE_MIN_FILTER, param);
     rc.texParameteri(WebGL.TEXTURE_2D, WebGL.TEXTURE_MAG_FILTER, param);
-    rc.texParameteri(
-        WebGL.TEXTURE_2D, WebGL.TEXTURE_WRAP_S, WebGL.CLAMP_TO_EDGE);
-    rc.texParameteri(
-        WebGL.TEXTURE_2D, WebGL.TEXTURE_WRAP_T, WebGL.CLAMP_TO_EDGE);
-    rc.texImage2D(WebGL.TEXTURE_2D, 0, internalFormat, width, height, 0, format,
-        type, null);
+    rc.texParameteri(WebGL.TEXTURE_2D, WebGL.TEXTURE_WRAP_S, WebGL.CLAMP_TO_EDGE);
+    rc.texParameteri(WebGL.TEXTURE_2D, WebGL.TEXTURE_WRAP_T, WebGL.CLAMP_TO_EDGE);
+    rc.texImage2D(WebGL.TEXTURE_2D, 0, internalFormat, width, height, 0, format,type, null);
 
     final fbo = rc.createFramebuffer();
     rc.bindFramebuffer(WebGL.FRAMEBUFFER, fbo);
-    rc.framebufferTexture2D(WebGL.FRAMEBUFFER, WebGL.COLOR_ATTACHMENT0,
-        WebGL.TEXTURE_2D, texture, 0);
+    rc.framebufferTexture2D(WebGL.FRAMEBUFFER, WebGL.COLOR_ATTACHMENT0,WebGL.TEXTURE_2D, texture, 0);
     rc.viewport(0, 0, width, height);
     rc.clear(WebGL.COLOR_BUFFER_BIT);
 
